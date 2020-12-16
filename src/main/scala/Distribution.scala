@@ -49,13 +49,22 @@ object Distribution extends App {
 //          }
 //        })
 
-    //    history.events.filter( event => event match {
-    //      case DistributorSubscribed(userId) => true
-    //      case _ => false
-    //    }).map( disSubsEvent => { disSubsEvent match {
-    //      case DistributorSubscribed(userId) => userId
-    //      case _ => 0
-    //    }}).filter( _ != 0 ).map( x=> UserId(x))
+    //    history.events.fold(List(): List[UserId]) ((e1: Event, e2: Event) => {
+    //      (e1,e2) match {
+    //        case DistributorSubscribed(userId) => userId
+    ////          userId :: distributor
+    //        case DistributorUnsubscribed(userId) => Nil
+    //      }
+    //    })
+    //
+
+//        history.events.filter( event => event match {
+//          case DistributorSubscribed(userId) => true
+//          case _ => false
+//        }).map( disSubsEvent => { disSubsEvent match {
+//          case DistributorSubscribed(userId) => userId
+//          case _ => 0
+//        }}).filter( _ != 0 ).map( x=> UserId(x))
 
     //      for {
     //        event <- history.events
@@ -64,6 +73,13 @@ object Distribution extends App {
     //          case _ => false
     //        })
     //      } yield event
-    List()
+
+    history.events.filter( event => event match {
+      case DistributorSubscribed(userId) => true
+      case _ => false
+    }).map( disSubsEvent => { disSubsEvent match {
+      case DistributorSubscribed(userId: UserId) => userId
+      case _ => UserId("0")
+    }}).filter( _ != UserId("0"))
   }
 }
