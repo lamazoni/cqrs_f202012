@@ -74,12 +74,30 @@ object Distribution extends App {
     //        })
     //      } yield event
 
-    history.events.filter( event => event match {
-      case DistributorSubscribed(userId) => true
-      case _ => false
-    }).map( disSubsEvent => { disSubsEvent match {
-      case DistributorSubscribed(userId: UserId) => userId
-      case _ => UserId("0")
-    }}).filter( _ != UserId("0"))
+//    history.events.filter( event => event match {
+//      case DistributorSubscribed(userId) => true
+//      case _ => false
+//    }).map( disSubsEvent => { disSubsEvent match {
+//      case DistributorSubscribed(userId: UserId) => userId
+//      case _ => UserId("0")
+//    }}).filter( _ != UserId("0"))
+
+    history.events.foldLeft(List(): List[UserId]) ((distributor: List[UserId], event: Event) => {
+      event match {
+        case DistributorSubscribed(userId) => userId :: distributor
+        case DistributorUnsubscribed(userId) => distributor.filter(_ == userId)
+        case _ => distributor
+      }
+    })
+
+//    List(1, 2, 3);
+//
+//    1.toString();
+//
+//    List(1, 2, 3)
+//      .foldLeft("")((acc: String, value: Int) => {
+//        acc.toString().concat(value.toString())
+//      });
+
   }
 }
